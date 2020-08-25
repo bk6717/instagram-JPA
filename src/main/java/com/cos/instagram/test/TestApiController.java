@@ -5,8 +5,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.instagram.domain.follow.Follow;
+import com.cos.instagram.domain.follow.FollowRepository;
 import com.cos.instagram.domain.image.Image;
 import com.cos.instagram.domain.image.ImgRepository;
 import com.cos.instagram.domain.tag.Tag;
@@ -27,18 +32,28 @@ public class TestApiController {
 	@Autowired
 	private TagRepository tagRepostory;
 	
-	@GetMapping("/test/join")
-	public User join() {
-		User user = User.builder()
-				.name("이병근")
-				.password("1234")
-				.phone("0102222")
-				.bio("안녕!")
-				.role(UserRole.USER)
-				.build();
+	@Autowired
+	private FollowRepository followRepository;
+	
+	@PostMapping("/test/join")
+	public User join(@RequestBody User user) {
+		
+		user.setRole(UserRole.USER);
+		
 		User userEntity = userRepository.save(user);
 		return userEntity;
+		
 	}
+	
+	@PostMapping("/test/api/input")
+	public Image input(@RequestBody Image image) {
+		
+		Image imageEntity = imgRepository.save(image);
+		
+		return imageEntity;
+		
+	}
+	
 	
 	
 	@GetMapping("/test/image")
@@ -82,4 +97,23 @@ public class TestApiController {
 	public List<Tag> tagList(){
 		return tagRepostory.findAll();
 	}
+	
+	@PostMapping("/test/api/follow/{fromUserId}/{toUserId}")
+	public String follow(@PathVariable int fromUserId, @PathVariable int toUserId) {
+		
+		User fromUserEntity = userRepository.findById(fromUserId).get();
+		User toUserEntity = userRepository.findById(toUserId).get();
+		
+		Follow follow = Follow.builder()
+				.fromUser(fromUserEntity)
+				.toUser(toUserEntity)
+				.build();
+		
+		followRepository.save(follow);
+		
+		return fromUserEntity.getUsername() +" 이 "
+		+ toUserEntity.getUsername()+"을 팔로우 하였습니다.";
+	}
+	
+
 }

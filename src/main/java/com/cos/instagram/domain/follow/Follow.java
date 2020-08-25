@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-//한명의 유저는 팔로우를 여러번할수있ㄷ
+//한명의 유저는 팔로우를 여러번할수다.
 public class Follow {
 	
 	@Id
@@ -36,7 +36,7 @@ public class Follow {
 	private User fromUser;
 	
 	@ManyToOne
-	@JoinColumn(name = "to")
+	@JoinColumn(name = "toUserId")
 	private User toUser;
 	
 	@CreationTimestamp
