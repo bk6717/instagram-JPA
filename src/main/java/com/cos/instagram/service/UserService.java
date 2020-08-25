@@ -30,4 +30,8 @@ public class UserService {
 		userRepository.save(joinReqDto.toEntity());
 	}
 	
+	@Transactional
+	public void 로그인() {
+//		userRepository.find()
+	}
 }

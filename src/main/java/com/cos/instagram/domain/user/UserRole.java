@@ -6,9 +6,9 @@ import lombok.Getter;
 public enum UserRole {
 	USER("ROLE_USER"), ADMIN("ROLE_ADMIN");
 
-	UserRole(String name) {
-		this.name = name;
+	UserRole(String key) {
+		this.key = key;
 	}
 	
-	private String name;
+	private String key;
 }

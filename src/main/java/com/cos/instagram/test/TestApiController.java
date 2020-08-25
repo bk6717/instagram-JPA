@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.instagram.config.handler.ex.MyUsernameNotFoundException;
 import com.cos.instagram.domain.follow.Follow;
 import com.cos.instagram.domain.follow.FollowRepository;
 import com.cos.instagram.domain.image.Image;
@@ -115,5 +116,12 @@ public class TestApiController {
 		+ toUserEntity.getUsername()+"을 팔로우 하였습니다.";
 	}
 	
+	@GetMapping("/test/username/{username}")
+	public String test9(@PathVariable String username){
+		if (!username.equals("test")) {
+				throw new MyUsernameNotFoundException("유저네임 못찾음");
+		}
+		return "username test";
+	}
 
 }

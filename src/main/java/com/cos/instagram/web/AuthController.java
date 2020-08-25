@@ -43,4 +43,10 @@ public class AuthController {
 		return "redirect:/auth/loginForm"; //회원가입을 완료하면 loginForm으로 
 	}
 	
+	@PostMapping("/auth/login")
+	public String login(String username, String Password) {
+		
+		
+		return "redirect:feed";
+	}
 }
