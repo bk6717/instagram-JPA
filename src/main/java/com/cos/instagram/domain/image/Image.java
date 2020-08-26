@@ -44,8 +44,9 @@ public class Image {
 	private User user; //Object로 관계를 맺는다. ORM
 	// 이미지하나에 여러개의 태그가 들어갈 수 있다.
 	@OneToMany(mappedBy = "image", fetch = FetchType.LAZY) //연관관계 주인의 변수명을 적는다.
-	//mappedBy : FK 가 아니라고 알려준다. FK의 주인을 정할때 사용한다.
-	@JsonIgnoreProperties({"image"}) // image만 json이 getter 호출안함
+	//mappedBy : FK가 아니라고 알려준다. FK의 주인을 정할때 사용한다.
+	
+	@JsonIgnoreProperties({"image"}) // image만 json이 getter호출안함
 	private List<Tag> tags; //태그는 여러개 등록해야하기때문
 	
 	@CreationTimestamp //DB에 insert 할때 현재시간 들어감 

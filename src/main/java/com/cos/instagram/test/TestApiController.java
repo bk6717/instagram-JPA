@@ -3,13 +3,20 @@ package com.cos.instagram.test;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.sound.midi.Soundbank;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cos.instagram.config.auth.PrincipalDetails;
 import com.cos.instagram.config.handler.ex.MyUsernameNotFoundException;
 import com.cos.instagram.domain.follow.Follow;
 import com.cos.instagram.domain.follow.FollowRepository;
@@ -35,6 +42,22 @@ public class TestApiController {
 	
 	@Autowired
 	private FollowRepository followRepository;
+	
+	@GetMapping("/test/facebook2")
+	public @ResponseBody String facebook2(@AuthenticationPrincipal PrincipalDetails principal) {
+		System.out.println(principal.getUser());
+		return "facebook 로그인 완료2";
+	}
+	//서비스를 타야 AuthenticationPrincipal 이 생김
+	@GetMapping("/test/facebook")
+	public @ResponseBody String facebook(Authentication authentication) {
+		PrincipalDetails principalDetails 
+								= (PrincipalDetails)authentication.getDetails();
+		System.out.println("principalDetails :" + authentication.getPrincipal()); //facebook
+		System.out.println("principalDetails :" + principalDetails.getUser());
+		return "facebook 로그인 완료";
+	}
+
 	
 	@PostMapping("/test/join")
 	public User join(@RequestBody User user) {

@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,13 +15,18 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.client.registration.ClientRegistration.ProviderDetails.UserInfoEndpoint;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
+import com.cos.instagram.config.oauth.PrincipalOAuth2UserService;
 import com.cos.instagram.util.Script;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
+	
+	@Autowired
+	private PrincipalOAuth2UserService principalOAuth2UserService; 
 	
 	@Bean
 	public BCryptPasswordEncoder encode() {
@@ -42,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.and()
 				.formLogin()
 				.loginPage("/auth/loginForm")
-				.loginProcessingUrl("/image/feed")
+				.loginProcessingUrl("/auth/login")
+				.defaultSuccessUrl("/")
 				//로그인에 실패할시 failureHandler를 탄다.
 				.failureHandler(new AuthenticationFailureHandler() {
 					@Override
@@ -57,8 +64,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 					.logout()
 					// 기본값은 /logout이지만 통일성을위해서 auth 붙임
 					.logoutUrl("/auth/logout") 
-					.logoutSuccessUrl("/auth/loginForm");
-		
+					.logoutSuccessUrl("/auth/loginForm")
+					.and()
+					.oauth2Login() // oauth 요청주소가 전부 활성화.
+					.userInfoEndpoint() //oauth 로그인 성공 이후 사용자 정보를 가져오기위한 설정을 담당 
+					.userService(principalOAuth2UserService) //담당할 서비스를 등록한다. (로그인 후 후처리 되는 곳)
+					.and();
+					
 	}
 	
 }
