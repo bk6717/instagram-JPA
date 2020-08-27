@@ -2,6 +2,9 @@ package com.cos.instagram.config.oauth;
 
 import java.util.function.Supplier;
 
+import javax.mail.Session;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +17,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
 import com.cos.instagram.config.auth.PrincipalDetails;
+import com.cos.instagram.config.auth.dto.LoginUser;
 import com.cos.instagram.domain.user.User;
 import com.cos.instagram.domain.user.UserRepository;
 import com.cos.instagram.domain.user.UserRole;
@@ -25,7 +29,8 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
 	private static final Logger log = LoggerFactory.getLogger(PrincipalOAuth2UserService.class);
 	@Autowired
 	private UserRepository userRepository;
-	
+	@Autowired
+	private HttpSession session;
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	@Value("${cos.secret}")
@@ -74,7 +79,7 @@ public class PrincipalOAuth2UserService extends DefaultOAuth2UserService{
 						return userRepository.save(user);
 					}
 				});
-	
+			session.setAttribute("loginUser", new LoginUser(userEntity));
 			return userEntity;
 	
 				
